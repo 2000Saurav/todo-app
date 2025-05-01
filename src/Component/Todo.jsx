@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoForm from "./TodoForm";
 import TaskList from "./TaskList";
 import DateTime from "./DateTime";
 import './Todo.css';
 
+const todoKey = 'reactTodo'
 export default function Todo(){
-const [tasks, setTask] = useState([]);
+const [tasks, setTask] = useState(()=>{
+    const rawData = localStorage.getItem(todoKey)
+    if(!rawData) return [];
+    return JSON.parse(rawData);
+});
 function handleTaskForm(input){
     const {id, content, status} = input
     if(!input) return
@@ -31,6 +36,8 @@ function handleChecked(checkedValue){
     setTask(updatedTask)
     console.log('Clicked')
 }
+useEffect(()=>{localStorage.setItem(todoKey, JSON.stringify(tasks))}, [tasks])
+
     return(
         <>
         <h1>Todo Form</h1>
